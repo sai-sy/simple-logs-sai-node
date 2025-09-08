@@ -1,4 +1,4 @@
-// logger.js
+// index.js
 
 const dev = new Proxy(
   {},
