@@ -1,17 +1,20 @@
 // index.js
 
-const isProd =
-  process.env.ENVIRONMENT === "PRODUCTION" ||
-  process.env.ENVIRONMENT === "PROD" ||
-  process.env.NODE_ENV === "production" ||
-  process.env.NODE_ENV === "prod";
+function isProd() {
+  const env = (
+    process.env.ENVIRONMENT ||
+    process.env.NODE_ENV ||
+    ""
+  ).toLowerCase();
+  return env === "production" || env === "prod";
+}
 
 const dev = new Proxy(
   {},
   {
     get(_, method) {
       return (...args) => {
-        if (isProd) return;
+        if (isProd()) return;
 
         if (console[method]) {
           console[method](...args);
@@ -61,7 +64,7 @@ const logger = {
       const prodArgs = args.slice(0, -1);
       const devArgs = lastArg;
 
-      if (isProd) {
+      if (isProd()) {
         console.log(...prodArgs);
       } else {
         console.log(...devArgs);
